@@ -18,7 +18,8 @@ def scrape_all():
       "news_paragraph": news_paragraph,
       "featured_image": featured_image(browser),
       "facts": mars_facts(),
-      "last_modified": dt.datetime.now()
+      "last_modified": dt.datetime.now(),
+      "hemispheres": hemi_data(browser)  
     }
 
     # Stop webdriver and return data
@@ -91,9 +92,48 @@ def mars_facts():
     # Assign columns and set index of dataframe
     df.columns=['Description', 'Mars', 'Earth']
     df.set_index('Description', inplace=True)
+    print("Done with Mars facts")
 
     # Convert dataframe into HTML format, add bootstrap
     return df.to_html(classes="table table-striped")
+
+
+def hemi_data(browser):
+    
+    # Scrape hemisphere title and image url
+    # Visit the main page URL 
+    url = 'https://marshemispheres.com/'
+    browser.visit(url)
+
+    # Parse the resulting html with soup
+    html = browser.html
+    hemisphere_main_page = soup(html, 'html.parser')
+    
+    # Create a list to hold the images and titles.
+    hemisphere_image_urls = []
+    
+    
+    # Retrieve the image urls and titles for each hemisphere.
+    hemisphere_links = hemisphere_main_page.select("div.item [href]")
+    hemisphere_urls = [link['href'] for link in hemisphere_links]
+    
+    # Since each link appears twice in the element, we will only use every other one
+    for i in range(1, len(hemisphere_urls), 2):
+        #visit_and_pull_page(hemisphere_links[i]['href'])
+        hemisphere = {}
+        full_url = url + hemisphere_urls[i]
+        browser.visit(full_url)
+        hemisphere_obj = soup(browser.html, 'html.parser')
+        hemi_hi_res_url = hemisphere_obj.find('a',href=True,text='Sample').get('href')
+        hemisphere_title = hemisphere_obj.find('h2', class_ = 'title').text
+        hemisphere["img_url"] = url + hemi_hi_res_url
+        hemisphere["title"] = hemisphere_title
+        hemisphere_image_urls.append(hemisphere)
+        browser.back()
+    
+    # Print the list that holds the dictionary of each image url and title.
+    return hemisphere_image_urls
+
 
 if __name__ == "__main__":
     # If running as script, print scraped data
