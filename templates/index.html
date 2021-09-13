@@ -13,10 +13,10 @@
     <body>
         <div class="container">
             <!-- Add Jumbotron to Header-->
-            <div class="jumbotron text-center">
-                <h1>Mission to Mars</h1>
+            <div class="jumbotron text-center" style="background-image: url(https://www.gannett-cdn.com/presto/2020/07/06/PBRE/4a7ab970-939b-4a11-bbdf-a21f7f32ff7a-Mars_History.jpg?crop=1593,897,x3,y0&width=1593&height=897&format=pjpg&auto=webp)">
+                <h1 style=color:white><strong>Mission to Mars</strong></h1>
                 <!-- Add a button to activate the scraping script -->
-                <p><a class="btn btn-primary btn-lg" href="/scrape"
+                <p><a class="btn btn-danger btn-lg" href="/scrape"
                     role="button">Scrape New Data</a></p>
             </div>
             <!-- Mars News -->
@@ -40,7 +40,7 @@
                 <!-- Mars Facts -->
                 <div class="col-md-4">
                     <div class="row" id="mars-facts">
-                        <h4>Mars Facts</h4>
+                        <h2>Mars Facts</h2>
                         {{ mars.facts | safe }}
                     </div>
                 </div>
@@ -50,9 +50,11 @@
                 <h2 class="text-center">Mars Hemispheres</h2>
                 {% for hemisphere in mars.hemispheres %}
                 <div class="col-md-6">
-                    <img src="{{ hemisphere.img_url }}" class="img-responsive" alt="Responsive image">
-                    <div class="caption">
-                        <h4>{{hemisphere.title}}</h4>
+                    <div class="thumbnail">
+                        <img src="{{ hemisphere.img_url }}" class="img-responsive img-thumbnail" alt="Responsive image">
+                        <div class="caption">
+                            <h4>{{hemisphere.title}}</h4>
+                        </div>
                     </div>
                 </div>    
                 {% endfor %}
